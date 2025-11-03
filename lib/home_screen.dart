@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_app/email_screen.dart';
 import 'package:provider_app/model/todo_model.dart';
 import 'package:provider_app/provider/todo_provider.dart';
+
+// Second screen to navigate
+class NextScreen extends StatelessWidget {
+  const NextScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Next Page'),
+        backgroundColor: const Color(0xff622CA7),
+      ),
+      body: const Center(
+        child: Text(
+          'Welcome to the Next Screen!',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (title.isEmpty) return;
 
     context.read<TodoProvider>().addTodoList(
-      new TodoModel(title: title, isCompleted: false),
+      TodoModel(title: title, isCompleted: false),
     );
     _textController.clear();
     FocusScope.of(context).unfocus();
@@ -35,27 +57,16 @@ class _HomeScreenState extends State<HomeScreen> {
           content: TextField(
             controller: _textController,
             decoration: const InputDecoration(
-              hintText: 'Write you item...',
+              hintText: 'Write your item...',
               filled: true,
             ),
           ),
           actions: <Widget>[
             TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
             ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              onPressed: _handleSubmit,
-              child: Text('Submit'),
-            ),
+            TextButton(onPressed: _handleSubmit, child: const Text('Submit')),
           ],
         );
       },
@@ -67,89 +78,87 @@ class _HomeScreenState extends State<HomeScreen> {
     final itemProvider = Provider.of<TodoProvider>(context);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: const Text(
-      //     'Todo List',
-      //     style: TextStyle(
-      //       fontSize: 26,
-      //       fontWeight: FontWeight.bold,
-      //       color: Colors.black,
-      //     ),
-      //   ),
-      // ),
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(
-              child: Container(
-                // alignment: Alignment.center,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Color(0xff622CA7),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                  ),
+            // Header Container
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              decoration: const BoxDecoration(
+                color: Color(0xff622CA7),
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
                 ),
-                child: Center(
-                  child: const Text(
-                    'Todo List',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Todo List Text with left padding
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Todo List',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
+
+                  // Navigation button
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EmailScreen(),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                  ),
+                ],
               ),
             ),
 
+            // Todo List
             Expanded(
               flex: 3,
               child: ListView.builder(
-                itemBuilder: (context, itemIndex) {
+                itemCount: itemProvider.allTodoList.length,
+                itemBuilder: (context, index) {
+                  final todo = itemProvider.allTodoList[index];
                   return ListTile(
-                    onTap: () {
-                      itemProvider.todoStatusChanged(
-                        itemProvider.allTodoList[itemIndex],
-                      );
-                    },
+                    onTap: () => itemProvider.todoStatusChanged(todo),
                     leading: MSHCheckbox(
                       size: 30,
                       colorConfig: MSHColorConfig.fromCheckedUncheckedDisabled(
                         checkedColor: Colors.blue,
                       ),
                       style: MSHCheckboxStyle.stroke,
-                      value: itemProvider.allTodoList[itemIndex].isCompleted,
-                      onChanged: (selected) {
-                        itemProvider.todoStatusChanged(
-                          itemProvider.allTodoList[itemIndex],
-                        );
-                      },
+                      value: todo.isCompleted,
+                      onChanged: (selected) =>
+                          itemProvider.todoStatusChanged(todo),
                     ),
                     title: Text(
-                      itemProvider.allTodoList[itemIndex].title,
+                      todo.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
-                        decoration:
-                            itemProvider.allTodoList[itemIndex].isCompleted
+                        decoration: todo.isCompleted
                             ? TextDecoration.lineThrough
                             : null,
                       ),
                     ),
                     trailing: IconButton(
-                      onPressed: () {
-                        itemProvider.removeTodoList(
-                          itemProvider.allTodoList[itemIndex],
-                        );
-                      },
-                      icon: Icon(Icons.delete),
+                      onPressed: () => itemProvider.removeTodoList(todo),
+                      icon: const Icon(Icons.delete),
                     ),
                   );
                 },
-                itemCount: itemProvider.allTodoList.length,
               ),
             ),
           ],
