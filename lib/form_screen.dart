@@ -8,6 +8,7 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> {
+  bool _secureText = true;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _mobileController = TextEditingController();
@@ -72,14 +73,21 @@ class _FormScreenState extends State<FormScreen> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.email_outlined),
-                    suffixIcon: Icon(Icons.clear),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _emailController.clear();
+                        });
+                      },
+                      icon: Icon(Icons.clear),
+                    ),
                     hintText: 'Email address',
                     border: OutlineInputBorder(),
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Name',
+                          'Email',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(' *', style: TextStyle(color: Colors.red)),
@@ -91,34 +99,53 @@ class _FormScreenState extends State<FormScreen> {
                 SizedBox(height: 16),
                 TextField(
                   controller: _passwordController,
+                  obscureText: _secureText,
                   decoration: InputDecoration(
-                    // hintText: '********',
-                    suffixIcon: Icon(Icons.visibility_off),
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _secureText ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _secureText = !_secureText;
+                        });
+                      },
+                    ),
                   ),
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  obscuringCharacter: '*',
                 ),
-                SizedBox(height: 16),
-                ElevatedButton(onPressed: () {}, child: Text('Click Here')),
+                const SizedBox(height: 20),
                 TextField(
+                  controller: _passwordController,
+                  obscureText: _secureText,
+
                   decoration: InputDecoration(
-                    hintText: 'Enter your name',
-                    // labelText: 'Name',
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _secureText = !_secureText;
+                        });
+                      },
+                      icon: Icon(
+                        _secureText ? Icons.visibility_off : Icons.visibility,
+                      ),
+                    ),
+
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType: TextInputType.text,
+                  // keyboardType: TextInputType.visiblePassword,
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: '********',
-                    labelText: 'Name',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.text,
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    print('Name: ${_nameController.text}');
+                    print('Mobile: ${_mobileController.text}');
+                    print('Email: ${_emailController.text}');
+                    print('Password: ${_passwordController.text}');
+                  },
+                  child: Text('Click Here'),
                 ),
               ],
             ),
