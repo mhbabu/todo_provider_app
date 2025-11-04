@@ -20,6 +20,9 @@ class _FormScreenState extends State<FormScreen> {
       appBar: AppBar(
         title: const Text('Enter Email', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color.fromARGB(255, 32, 10, 61),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ), // 👈 This fixes the arrow color
       ),
       body: SingleChildScrollView(
         child: Card(
