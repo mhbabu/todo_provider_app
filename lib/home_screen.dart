@@ -1,30 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_app/design_screen.dart';
 import 'package:provider_app/form_screen.dart';
 import 'package:provider_app/model/todo_model.dart';
+import 'package:provider_app/other_screen.dart';
 import 'package:provider_app/provider/todo_provider.dart';
-
-// Second screen to navigate
-class NextScreen extends StatelessWidget {
-  const NextScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Next Page'),
-        backgroundColor: const Color(0xff622CA7),
-      ),
-      body: const Center(
-        child: Text(
-          'Welcome to the Next Screen!',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
-    );
-  }
-}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -92,35 +73,83 @@ class _HomeScreenState extends State<HomeScreen> {
                   bottomLeft: Radius.circular(20),
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Todo List Text with left padding
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Todo List',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        'Todo List',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Navigation button
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FormScreen(),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  ),
-                ],
+                    // Navigation buttons in the header with spacing between them
+                    SizedBox(width: 10), // Added spacing between buttons
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FormScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.text_rotation_angledown_sharp,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Form Page',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DesignScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.design_services,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Design Page',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OtherScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.other_houses,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Other Page', // Corrected label for "Other Page"
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 

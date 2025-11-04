@@ -18,7 +18,7 @@ class _FormScreenState extends State<FormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enter Email', style: TextStyle(color: Colors.white)),
+        title: const Text('Form Screen', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color.fromARGB(255, 32, 10, 61),
         iconTheme: const IconThemeData(
           color: Colors.white,
